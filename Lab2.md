@@ -4,5 +4,6 @@
 ### Диаграмма контейнеров
 <img width="2171" height="1175" alt="C4 Containers drawio" src="https://github.com/user-attachments/assets/2ed963db-779f-4dc5-83a9-4a37b3721670" />
 
-
 ### Диаграмма компонентов
+<img width="1691" height="1511" alt="C4 Components Auth drawio" src="https://github.com/user-attachments/assets/eeda6a25-c925-46c6-9dae-01500a5a48b6" />
+

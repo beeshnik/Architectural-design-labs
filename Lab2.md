@@ -7,3 +7,4 @@
 ### Диаграмма компонентов
 <img width="1691" height="1511" alt="C4 Components Auth drawio" src="https://github.com/user-attachments/assets/eeda6a25-c925-46c6-9dae-01500a5a48b6" />
 
+<img width="1321" height="1481" alt="C4 Components Journal drawio" src="https://github.com/user-attachments/assets/41596d35-4cc9-43c0-8dba-18e39320c429" />

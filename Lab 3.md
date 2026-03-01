@@ -65,6 +65,10 @@ deactivate Client
 
 @enduml
 ```
+
+<img width="2039" height="933" alt="image" src="https://github.com/user-attachments/assets/c823697b-7ca6-48c1-b9a7-2c9a8fe79d23" />
+
+
 ### Модель БД
 
 ```plantUML
@@ -141,6 +145,9 @@ Trade "1" -- "*" TradePosition : has_positions >
 Trade::direction .. Direction : <<enum>>
 @enduml
 ```
+
+<img width="537" height="1266" alt="image" src="https://github.com/user-attachments/assets/b5ac1cfa-04ce-4fae-87cb-5eb977805a7e" />
+
 
 ### Анализ принципов разработки
 

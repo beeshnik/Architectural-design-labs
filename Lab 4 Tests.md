@@ -1,4 +1,8 @@
 ## Algorythms
+
+<img width="1055" height="802" alt="Протокол тестирования" src="https://github.com/user-attachments/assets/cfe90d1b-1e44-4806-b732-ed0e96af9fc4" />
+
+
 #### `GET {{baseUrl}}/api/v1/algorithms/:algorithm_id`
 
 ```js
@@ -553,6 +557,7 @@ if (pm.response.code >= 200 && pm.response.code < 300) {
 ```
 Body
 <img width="922" height="561" alt="image" src="https://github.com/user-attachments/assets/2e11216f-74f8-4b01-a5a5-6069d449d66b" />
+
 
 
 

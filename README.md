@@ -122,12 +122,12 @@
 ---
 
 #### Диаграмма системного контекста
-<img width="651" height="421" alt="C4 System context drawio" src="https://github.com/user-attachments/assets/41c4e9bc-883f-4e8a-8f93-7c6377f72df9" />
+<img width="651" height="421" alt="C4 System context drawio" src="https://github.com/user-attachments/assets/e36d5ff8-3d67-400b-b1ec-b78a0650b4af" />
 
 #### Диаграмма контейнеров
-<img width="2171" height="1175" alt="C4 Containers drawio" src="https://github.com/user-attachments/assets/2ed963db-779f-4dc5-83a9-4a37b3721670" />
+<img width="2432" height="1261" alt="C4 Containers drawio" src="https://github.com/user-attachments/assets/a53eb5c5-6ade-43f9-8e09-08c68be54603" />
 
 #### Диаграмма компонентов
-<img width="1691" height="1511" alt="C4 Components Auth drawio" src="https://github.com/user-attachments/assets/eeda6a25-c925-46c6-9dae-01500a5a48b6" />
+<img width="1852" height="1631" alt="C4 Components Auth drawio" src="https://github.com/user-attachments/assets/951b8053-ca3b-44bf-ad8d-abda56b0f116" />
 
-<img width="1321" height="1481" alt="C4 Components Journal drawio" src="https://github.com/user-attachments/assets/41596d35-4cc9-43c0-8dba-18e39320c429" />
+<img width="1781" height="1722" alt="C4 Components Journal drawio" src="https://github.com/user-attachments/assets/7ac69689-0220-4a15-9582-caab31dcfc45" />

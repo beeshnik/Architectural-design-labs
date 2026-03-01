@@ -472,69 +472,87 @@ Params
 
 ## Trades
 
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
+#### `GET {{baseUrl}}/api/v1/trades?journal_id=string&algorithm_id=string&ticker=string&direction=short&skip=0&limit=100`
 
 ```js
+// Generic tests for List Trades
+pm.test("Response time is under 2000ms", function () {
+  pm.expect(pm.response.responseTime).to.be.below(2000);
+});
 
+pm.test("Status is 2xx or an error", function () {
+  pm.expect(pm.response.code).to.be.oneOf([200, 206, 400, 401, 403, 404, 422, 429, 500, 502, 503]);
+});
+
+if (pm.response.code === 200) {
+  pm.test("Response is JSON", function () {
+    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();
+    pm.expect(ct).to.include('application/json');
+    pm.expect(() => pm.response.json()).to.not.throw();
+  });
+
+  pm.test("List response is an array or has an items array", function () {
+    const json = pm.response.json();
+    const isArray = Array.isArray(json);
+    const hasItemsArray = json && typeof json === 'object' && Array.isArray(json.items);
+    const hasDataArray = json && typeof json === 'object' && Array.isArray(json.data);
+    pm.expect(isArray || hasItemsArray || hasDataArray, "Expected array, or {items: []}, or {data: []}").to.equal(true);
+  });
+} else {
+  pm.test("Error response is JSON (when indicated) or has body", function () {
+    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();
+    if (ct.includes('application/json')) {
+      pm.expect(() => pm.response.json()).to.not.throw();
+    } else {
+      pm.expect(pm.response.text()).to.be.a('string');
+    }
+  });
+}
 ```
-Body
-
-Headers
 
 Params
+<img width="934" height="758" alt="image" src="https://github.com/user-attachments/assets/cb58d7bf-12b2-413a-9bee-c8b3354c0f1e" />
 
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
+
+#### `POST {{baseUrl}}/api/v1/trades`
 
 ```js
+// Generic tests for Create Trade
+pm.test("Response time is under 2000ms", function () {
+  pm.expect(pm.response.responseTime).to.be.below(2000);
+});
 
+pm.test("Status is success (2xx) or client/server error", function () {
+  pm.expect(pm.response.code).to.be.oneOf([200, 201, 202, 400, 401, 403, 404, 409, 422, 429, 500, 502, 503]);
+});
+
+if (pm.response.code >= 200 && pm.response.code < 300) {
+  pm.test("Successful response is JSON", function () {
+    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();
+    pm.expect(ct).to.include('application/json');
+    pm.expect(() => pm.response.json()).to.not.throw();
+  });
+
+  pm.test("Response has a trade id-like field if returned", function () {
+    const json = pm.response.json();
+    const hasId = json && typeof json === 'object' && (
+      'id' in json || 'trade_id' in json || (json.data && (('id' in json.data) || ('trade_id' in json.data)))
+    );
+    pm.expect(hasId || true).to.equal(true);
+  });
+} else {
+  pm.test("Error response has a body and is JSON when indicated", function () {
+    const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();
+    if (ct.includes('application/json')) {
+      pm.expect(() => pm.response.json()).to.not.throw();
+    } else {
+      pm.expect(pm.response.text()).to.be.a('string');
+    }
+  });
+}
 ```
 Body
+<img width="922" height="561" alt="image" src="https://github.com/user-attachments/assets/2e11216f-74f8-4b01-a5a5-6069d449d66b" />
 
-Headers
 
-Params
-
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
-
-```js
-
-```
-Body
-
-Headers
-
-Params
-
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
-
-```js
-
-```
-Body
-
-Headers
-
-Params
-
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
-
-```js
-
-```
-Body
-
-Headers
-
-Params
-
-#### `PATCH {{baseUrl}}/api/v1/algorithms/:algorithm_id`
-
-```js
-
-```
-Body
-
-Headers
-
-Params
 

@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
@@ -11,25 +10,39 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - trading-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U trader -d trading_journal"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   api:
     build:
-      context: ./Lab4  # путь к папке с бэком
+      context: ./Lab4
       dockerfile: Dockerfile
     container_name: trading-journal-backend-compose
     environment:
-      DATABASE_URL: postgresql+asyncpg://trader:trader123@db:5432/trading_journal  # используем имя сервиса db
+      DATABASE_URL: postgresql+asyncpg://trader:trader123@db:5432/trading_journal
       ENCRYPTION_KEY: ${ENCRYPTION_KEY:-your-32-byte-secret-key-here-12345678}
-      APP_NAME: ${APP_NAME:-Trading Journal API}
-      DEBUG: "false"
+    # ОБЯЗАТЕЛЬНО добавьте эту строку для CI:
+    ports:
+      - "8000:8000"
     networks:
       - trading-network
     restart: unless-stopped
-    # ports не обязательно expose наружу, только если нужен прямой доступ
+    depends_on:
+      db:
+        condition: service_healthy  # Ждем пока БД будет готова
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   frontend:
     build:
-      context: ./Lab5  # путь к папке с фронтом
+      context: ./Lab5
       dockerfile: Dockerfile
     container_name: trading-journal-frontend-compose
     ports:
@@ -46,3 +59,4 @@ networks:
 
 volumes:
   postgres_data:
+    name: trading_data

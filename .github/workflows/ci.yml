@@ -43,3 +43,42 @@ jobs:
       - name: Build all services
         run: |
           docker compose -f docker-compose.yml build
+  postman-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js for Newman
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install Newman
+        run: npm install -g newman newman-reporter-htmlextra
+
+      - name: Build and start services
+        run: |
+          docker compose up -d --build
+          echo "Waiting for services..."
+          sleep 20
+          
+      - name: Health check
+        run: |
+          # Ждем пока API поднимется (retry 30 раз)
+          for i in {1..30}; do
+            curl -s http://localhost:8000/health && echo "API is up!" && break
+            echo "Attempt $i/30..."
+            sleep 2
+          done
+
+      - name: Run Integration Tests (Newman)
+        run: |
+          newman run tests/integration.json \
+            --env-var "baseUrl=http://localhost:8000" \
+            --reporters cli \
+            --delay-request 100
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v

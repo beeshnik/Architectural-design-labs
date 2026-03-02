@@ -20,7 +20,7 @@ jobs:
       # Собираем образ бэкенда
       - name: Build Backend
         run: |
-          docker build ./backend -t trading-journal-backend:latest
+          docker build ./Lab4 -t trading-journal-backend:latest
 
   # Сборка фронтенда  
   build-frontend:
@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Frontend
         run: |
-          docker build ./frontend -t trading-journal-frontend:latest
+          docker build ./Lab5 -t trading-journal-frontend:latest
 
   # Проверка docker-compose (собирается ли всё вместе)
   test-compose:

@@ -1,0 +1,19 @@
+version: '3.8'
+
+# Override для интеграционного тестирования
+services:
+  frontend:
+    build:
+      target: builder
+    command: npm run test -- --run
+    volumes:
+      - ./coverage:/app/coverage
+
+  backend:
+    environment:
+      - ENVIRONMENT=test
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/trading_journal_test
+    
+  db:
+    environment:
+      - POSTGRES_DB=trading_journal_test

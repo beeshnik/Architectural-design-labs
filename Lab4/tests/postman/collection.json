@@ -1,0 +1,274 @@
+{
+  "info": {
+    "name": "Trading Journal API",
+    "description": "Postman collection for Trading Journal API integration tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has status ok\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql(\"ok\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Algorithm",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"RSI Strategy\",\n    \"body\": \"Buy when RSI < 30, Sell when RSI > 70\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/algorithms",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "algorithms"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has algorithm ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.exist;",
+              "    pm.environment.set(\"algorithm_id\", jsonData.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Algorithms",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/algorithms",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "algorithms"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has items array\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.items).to.be.an('array');",
+              "    pm.expect(jsonData.total).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Journal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"My Trading Journal\",\n    \"deposit_balance\": 10000,\n    \"bybit_api_key\": null,\n    \"bybit_api_secret\": null\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/journals",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "journals"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has journal ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.exist;",
+              "    pm.environment.set(\"journal_id\", jsonData.id);",
+              "});",
+              "",
+              "pm.test(\"Journal has correct balance\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.deposit_balance).to.eql(10000);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Journal with Balance",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/journals/{{journal_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "journals", "{{journal_id}}"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has calculated balance\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.calculated_balance).to.exist;",
+              "    pm.expect(jsonData.balance_difference).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Trade",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"journal_id\": \"{{journal_id}}\",\n    \"algorithm_id\": \"{{algorithm_id}}\",\n    \"opened_at\": \"2024-01-15T10:30:00\",\n    \"closed_at\": \"2024-01-15T14:45:00\",\n    \"ticker\": \"BTCUSDT\",\n    \"direction\": \"long\",\n    \"initial_volume\": 0.5,\n    \"open_price\": 42000,\n    \"close_price\": 43500,\n    \"commission\": 10.50,\n    \"positions\": [\n        {\n            \"price\": 42800,\n            \"volume\": 0.2,\n            \"position_type\": \"add\"\n        }\n    ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/trades",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "trades"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test(\"Response has trade ID\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.exist;",
+              "    pm.environment.set(\"trade_id\", jsonData.id);",
+              "});",
+              "",
+              "pm.test(\"Trade has calculated PnL\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.pnl).to.exist;",
+              "});",
+              "",
+              "pm.test(\"Trade has positions\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.positions).to.be.an('array');",
+              "    pm.expect(jsonData.positions.length).to.eql(1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Trades",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/trades?journal_id={{journal_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "trades"],
+          "query": [
+            {
+              "key": "journal_id",
+              "value": "{{journal_id}}"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response has filtered results\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.items).to.be.an('array');",
+              "    pm.expect(jsonData.total).to.be.at.least(1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}

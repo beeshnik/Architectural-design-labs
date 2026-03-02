@@ -1,0 +1,29 @@
+{
+  "name": "Trading Journal Local",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "algorithm_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "journal_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "trade_id",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}

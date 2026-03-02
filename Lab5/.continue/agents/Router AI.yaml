@@ -1,0 +1,75 @@
+# This is an example configuration file
+# To learn more, see the full config.yaml reference: https://docs.continue.dev/reference
+
+name: Router AI
+version: 1.0.0
+schema: v1
+
+# Define which models can be used
+# https://docs.continue.dev/customization/models
+models:
+  - name: deepseek-v3.2
+    provider: openai
+    model: deepseek/deepseek-v3.2
+    apiKey: sk-CjjqJvexonSjNWLa9h-oFmXLisBGeXTL
+    apiBase: https://routerai.ru/api/v1
+    roles:
+      - chat
+      - apply
+      - edit
+  - name: qwen3 coder next
+    provider: openai
+    model: qwen/qwen3-coder-next
+    apiKey: sk-CjjqJvexonSjNWLa9h-oFmXLisBGeXTL
+    apiBase: https://routerai.ru/api/v1
+    roles:
+      - chat
+      - apply
+      - edit
+  - name: kimi-k2.5
+    provider: openai
+    model: moonshotai/kimi-k2.5
+    apiKey: sk-CjjqJvexonSjNWLa9h-oFmXLisBGeXTL
+    apiBase: https://routerai.ru/api/v1
+    roles:
+      - chat
+      - apply
+      - edit
+  - name: qwen3 coder next (Ollama)
+    provider: ollama
+    model: qwen3-coder-next:cloud
+    roles:
+      - chat
+      - edit
+      - apply
+  - name: DeepSeek V 3.2 (Ollama)
+    provider: ollama
+    model: deepseek-v3.2:cloud
+    roles:
+      - chat
+      - edit
+      - apply
+  - name: Kimi 2.5 (Ollama)
+    provider: ollama
+    model: kimi-k2.5:cloud
+    roles:
+      - chat
+      - edit
+      - apply
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text:latest
+    roles:
+      - embed
+  - name: DeepSeek Coder (1.3b)
+    provider: ollama
+    model: deepseek-coder:1.3b
+    roles:
+      - autocomplete
+
+# models:
+#   - name: GPT-4 gov
+#     provider: askSage
+#     model: gpt4-gov
+#     apiBase: https://api.asksage.ai/server/
+#     apiKey: <YOUR_ASK_SAGE_API_KEY>

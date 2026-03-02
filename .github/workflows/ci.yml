@@ -1,35 +1,48 @@
-name: CI
+name: CI - Build and Integration Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
-  integration-test:
+  test-compose:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Устанавливаем Node.js для Newman
-      - name: Setup Node.js
+      # Вариант A: Newman + Postman (рекомендую - использует твою коллекцию [1])
+      - name: Setup Node.js for Newman
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-
+          
       - name: Install Newman
         run: npm install -g newman newman-reporter-htmlextra
 
-      - name: Build and start containers
+      - name: Build and start services
         run: |
           docker compose up -d --build
-          # Ждем пока БД и API поднимутся
-          sleep 15
-          # Проверяем health API (если есть endpoint /health)
-          until curl -s http://localhost:8000/health; do 
-            echo "Waiting for API..." 
-            sleep 2 
+          echo "Waiting for services..."
+          sleep 20
+          
+      - name: Health check
+        run: |
+          # Ждем пока API поднимется (retry 30 раз)
+          for i in {1..30}; do
+            curl -s http://localhost:8000/health && echo "API is up!" && break
+            echo "Attempt $i/30..."
+            sleep 2
           done
 
-      - name: Run Integration Tests
-        run: newman run tests/integration.json --reporters cli
+      - name: Run Integration Tests (Newman)
+        run: |
+          newman run tests/trading-journal.json \
+            --env-var "baseUrl=http://localhost:8000" \
+            --reporters cli \
+            --delay-request 100
 
       - name: Cleanup
         if: always()

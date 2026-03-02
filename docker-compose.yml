@@ -46,5 +46,3 @@ networks:
 
 volumes:
   postgres_data:
-    external: true  # Использовать существующий volume
-    name: trading_data  # точное имя из docker volume ls

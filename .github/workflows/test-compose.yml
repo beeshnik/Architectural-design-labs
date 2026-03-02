@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Integration Tests (Newman)
         run: |
-          newman run tests/trading-journal.json \
+          newman run tests/integration.json \
             --env-var "baseUrl=http://localhost:8000" \
             --reporters cli \
             --delay-request 100

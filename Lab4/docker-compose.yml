@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    container_name: trading-journal-backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://trader:trader123@host.docker.internal:5433/trading_journal
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-your-32-byte-secret-key-here-12345678}
+      APP_NAME: ${APP_NAME:-Trading Journal API}
+      DEBUG: "false"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

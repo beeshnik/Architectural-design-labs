@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: trader
+      POSTGRES_PASSWORD: trader123
+      POSTGRES_DB: trading_journal
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - trading-network
+
+  api:
+    build:
+      context: ./Lab4  # путь к папке с бэком
+      dockerfile: Dockerfile
+    container_name: trading-journal-backend-compose
+    environment:
+      DATABASE_URL: postgresql+asyncpg://trader:trader123@db:5432/trading_journal  # используем имя сервиса db
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-your-32-byte-secret-key-here-12345678}
+      APP_NAME: ${APP_NAME:-Trading Journal API}
+      DEBUG: "false"
+    networks:
+      - trading-network
+    restart: unless-stopped
+    # ports не обязательно expose наружу, только если нужен прямой доступ
+
+  frontend:
+    build:
+      context: ./Lab5  # путь к папке с фронтом
+      dockerfile: Dockerfile
+    container_name: trading-journal-frontend-compose
+    ports:
+      - "80:80"
+    networks:
+      - trading-network
+    restart: unless-stopped
+    depends_on:
+      - api
+
+networks:
+  trading-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    external: true  # Использовать существующий volume
+    name: trading_data  # точное имя из docker volume ls

@@ -1,0 +1,27 @@
+{
+  "id": "local-env",
+  "name": "Local Development",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "algorithmId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "journalId",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "tradeId",
+      "value": "",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

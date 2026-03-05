@@ -151,6 +151,83 @@ Trade::direction .. Direction : <<enum>>
 
 ### Анализ принципов разработки
 
+SOLID
+
+1. S - Single Responsibility Principle (Принцип единственной ответственности)
+
+```python
+# src/modules/trades/repository.py
+class TradeRepository:
+    """Только CRUD операции с БД"""
+    async def get_by_id(self, trade_id: str) -> Trade | None: ...
+    async def create(self, trade: Trade) -> Trade: ...
+    # Нет бизнес-логики!
+```
+
+```python
+# src/modules/trades/service.py
+class TradeService:
+    """Только бизнес-правила"""
+    async def create_trade(self, data: TradeCreate) -> Trade:
+        self._validate_positions(...)  # валидация
+        # координация создания
+    # Нет SQL-запросов!
+```
+
+2. Open/Closed Principle (Принцип открытости/закрытости)
+
+```python
+# src/modules/trades/models.py
+def calculate_pnl(self) -> Decimal:
+    if self.direction == "long":
+        gross_pnl = (self.close_price - self.open_price) * self.initial_volume
+    else:  # short
+        gross_pnl = (self.open_price - self.close_price) * self.initial_volume
+    # Можно добавить elif self.direction == "hedge": без изменения существующего кода
+    return gross_pnl - self.commission
+```
+
+3. Liskov Substitution Principle (Принцип подстановки Лисков)
+
+```python
+# src/modules/trades/repository.py
+class TradeRepository:
+    """Только CRUD операции с БД"""
+    async def get_by_id(self, trade_id: str) -> Trade | None: ...
+    async def create(self, trade: Trade) -> Trade: ...
+    # Нет бизнес-логики!
+```
+
+Interface Segregation Principle (Принцип разделения интерфейса)
+
+```python
+# src/modules/trades/schemas.py
+
+class TradeCreate(BaseModel):      # Только для создания
+    journal_id: str                # Обязательно
+    algorithm_id: str | None
+    # ... все поля обязательны
+
+class TradeUpdate(BaseModel):      # Только для обновления
+    ticker: str | None = None      # Все опционально
+    direction: str | None = None
+
+class TradeFilters(BaseModel):     # Только для фильтрации
+    journal_id: str | None = None
+    ticker: str | None = None
+    # Нет полей цены, т.к. фильтруем только по идентификаторам и категориям
+```
+
+Dependency Inversion Principle (Принцип инверсии зависимостей)
+
+```python
+# src/modules/trades/service.py
+class TradeService:
+    def __init__(self, session: AsyncSession) -> None:
+        self.repository = TradeRepository(session)  # Инжектим, не импортируем глобально
+    # Service зависит от абстракции (AsyncSession), не от конкретного engine
+```
+
 #### BDUF (Big Design Up Front)
 Определение: Масштабное проектирование всей системы (архитектура, БД, UI) перед началом кодирования.
 

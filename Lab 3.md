@@ -198,7 +198,7 @@ class TradeRepository:
     # Нет бизнес-логики!
 ```
 
-Interface Segregation Principle (Принцип разделения интерфейса)
+4. Interface Segregation Principle (Принцип разделения интерфейса)
 
 ```python
 # src/modules/trades/schemas.py
@@ -218,7 +218,7 @@ class TradeFilters(BaseModel):     # Только для фильтрации
     # Нет полей цены, т.к. фильтруем только по идентификаторам и категориям
 ```
 
-Dependency Inversion Principle (Принцип инверсии зависимостей)
+5. Dependency Inversion Principle (Принцип инверсии зависимостей)
 
 ```python
 # src/modules/trades/service.py
